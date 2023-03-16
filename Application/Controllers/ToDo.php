@@ -24,4 +24,14 @@ final class ToDo extends BaseController
 			'error' => 'Internal Server Error',
 		], 500);
 	}
+
+	public function getAll()
+	{
+		$db = new MongoDBAdapter([
+			'uri' => 'mongodb://127.0.0.1:27017/',
+			'database' => 'todo',
+		]);
+
+		$this->response->send(['result' => $db->Get('todo', ['name', '_id', 'isDone'], [])], 200);
+	}
 }
