@@ -16,6 +16,7 @@ class Routes extends BaseRoutes
 
 		$this->get('/', 'ToDo::getAll', ['after' => [Security::CORS(['https://localhost:3000'])]]);
 		$this->post('/', 'ToDo::create', ['after' => [Security::CORS(['https://localhost:3000'])]]);
+		$this->put('/:id', 'ToDo::edit', ['after' => [Security::CORS(['https://localhost:3000'])]]);
 
 		$this->all('*', 'ToDo::matchAll', ['after' => [Security::CORS(['https://localhost:3000'])]]);
 

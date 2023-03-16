@@ -69,4 +69,49 @@ final class ToDo extends BaseController
 
 		$this->response->send(['result' => $result], 200);
 	}
+
+	public function edit()
+	{
+		$db = new MongoDBAdapter([
+			'uri' => 'mongodb://127.0.0.1:27017/',
+			'database' => 'todo',
+		]);
+
+		if (!isset($this->request->body->name)) {
+			$this->response->send(['result' => ['message' => "Name is required"]], 400);
+			return;
+		}
+
+		if (!isset($this->request->body->isDone)) {
+			$this->response->send(['result' => ['message' => "IsDone is required"]], 400);
+			return;
+		}
+
+		if (!isset($this->request->params->id)) {
+			$this->response->send(['result' => ['message' => "Id is required"]], 400);
+			return;
+		}
+
+		if (gettype($this->request->body->name) != "string") {
+			$this->response->send(['result' => ['message' => "Name is not string"]], 400);
+			return;
+		}
+
+		if (gettype($this->request->body->isDone) != "boolean") {
+			$this->response->send(['result' => ['message' => "IsDone is not boolean"]], 400);
+			return;
+		}
+
+		$name = $this->request->body->name;
+		$isDone = $this->request->body->isDone;
+		$id = $this->request->params->id;
+
+		$result = $db->Update(
+			'todo',
+			['name' => $name, 'isDone' => $isDone],
+			['_id' => new BSON\ObjectID($id)]
+		);
+
+		$this->response->send(['result' => $result], 200);
+	}
 }
