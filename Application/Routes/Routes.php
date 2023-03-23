@@ -18,6 +18,11 @@ class Routes extends BaseRoutes
 		$this->post('/', 'ToDo::create', ['after' => [Security::CORS(['https://localhost:3000'])]]);
 		$this->put('/:id', 'ToDo::edit', ['after' => [Security::CORS(['https://localhost:3000'])]]);
 
+		$this->group('auth', ['after' => [Security::CORS(['https://localhost:3000'])]], function ($router) {
+			$router->post('register', 'Auth::Register');
+			$router->post('login', 'Auth::Login');
+		});
+
 		$this->all('*', 'ToDo::matchAll', ['after' => [Security::CORS(['https://localhost:3000'])]]);
 
 		$this->errorHandler('ToDo::errorHandler');
