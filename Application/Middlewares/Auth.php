@@ -2,33 +2,29 @@
 
 namespace Application\Middlewares;
 
+use Exception;
+use Internal\Libraries\JWT;
+use Internal\Logger\Logger;
 use Internal\Middlewares\BaseMiddleware;
 
 class Auth extends BaseMiddleware
 {
-	public static function index()
+	public static function CheckToken()
 	{
 		return function ($request, $response) {
 			if (empty($request->header('token'))) {
 				return $response->send(['message' => 'Token required'], 401);
 			}
 
-			if ($request->header('token') !== 'token') {
+			$decoded = null;
+
+			try {
+				$decoded = JWT::Decode($request->header('token'), 'key', 'HS256');
+			} catch (Exception) {
 				return $response->send(['message' => 'Invalid token'], 401);
 			}
 
-			$token = $request->header('token');
-
-			$request->data['token'] = $token;
-		};
-	}
-
-	public static function after()
-	{
-		return function ($request, $response) {
-			$newBody = array_merge($response->body(), ['code' => $response->status()]);
-
-			$response->setBody($newBody);
+			$request->data['id'] = $decoded['id'];
 		};
 	}
 }

@@ -14,7 +14,7 @@ class Routes extends BaseRoutes
 		// Pass true as first argument if this is root route
 		parent::__construct(true);
 
-		$this->get('/', 'ToDo::getAll', ['after' => [Security::CORS(['https://localhost:3000'])]]);
+		$this->get('/', 'ToDo::getAll', ['before' => [Auth::CheckToken()], 'after' => [Security::CORS(['https://localhost:3000'])]]);
 		$this->post('/', 'ToDo::create', ['after' => [Security::CORS(['https://localhost:3000'])]]);
 		$this->put('/:id', 'ToDo::edit', ['after' => [Security::CORS(['https://localhost:3000'])]]);
 
