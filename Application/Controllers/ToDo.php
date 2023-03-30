@@ -32,7 +32,9 @@ final class ToDo extends BaseController
 			'database' => 'todo',
 		]);
 
-		$this->response->send(['result' => $db->Get('todo', ['name', '_id', 'isDone'], [])], 200);
+		$authorId = $this->request->data['id'];
+
+		$this->response->send(['result' => $db->Get('todo', ['name', '_id', 'isDone'], ['author' => $authorId])], 200);
 	}
 
 	public function create()
@@ -64,8 +66,9 @@ final class ToDo extends BaseController
 
 		$name = $this->request->body->name;
 		$isDone = $this->request->body->isDone;
+		$authorId = $this->request->data['id'];
 
-		$result = $db->Insert('todo', ['name' => $name, 'isDone' => $isDone]);
+		$result = $db->Insert('todo', ['name' => $name, 'isDone' => $isDone, 'author' => $authorId]);
 
 		$this->response->send(['result' => $result], 200);
 	}
