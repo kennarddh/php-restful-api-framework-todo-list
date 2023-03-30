@@ -108,11 +108,12 @@ final class ToDo extends BaseController
 		$name = $this->request->body->name;
 		$isDone = $this->request->body->isDone;
 		$id = $this->request->params->id;
+		$authorId = $this->request->data['id'];
 
 		$result = $db->Update(
 			'todo',
 			['name' => $name, 'isDone' => $isDone],
-			['_id' => new BSON\ObjectID($id)]
+			['_id' => new BSON\ObjectID($id), 'author' => $authorId]
 		);
 
 		$this->response->send(['result' => $result], 200);
